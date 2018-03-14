@@ -163,13 +163,13 @@ export default {
             this.playerHp += potion
           }
         }
-        if (this.monsterHp > 0) {
-        }
       }
       else{
         this.logs.unshift('Player tries to heal but he has no potions left!')
       }
-      this.monsterTurn()
+      if (this.monsterHp > 0) {
+        this.monsterTurn()
+      }
     },
     d20(){
       return this.rowDice(1, 20)
