@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="container">
-      <p class="title" align="center">D&D RPG</p>
+      <p class="title" align="center">RPG</p>
       <div class="col-md-6 col-md-offset-3">
         <rpg-game></rpg-game>
       </div>

@@ -28,7 +28,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="col-xs-4" align="center">
-          <button type="button" class="btn btn-danger" :disabled="playerHp <= 0" @click="atack">ATACK</button>
+          <button type="button" class="btn btn-danger" :disabled="playerHp <= 0" @click="attack">ATTACK</button>
         </div>
         <div class="col-xs-4" align="center">
           <button type="button" class="btn btn-success" :disabled="playerHp <= 0" @click="heal">HEAL</button>
@@ -82,9 +82,9 @@ export default {
       this.logs = []
     },
     monsterTurn(){
-      this.monsterAtack()
+      this.monsterAttack()
     },
-    atack(){
+    attack(){
       if (this.monsterHp <= 0) {
         this.logs.unshift('The monster is already dead!')
       }
@@ -92,7 +92,7 @@ export default {
         let row = this.d20()
         if (row >= 19){
           let damage = this.d10()+this.d10()
-          this.logs.unshift('Player atacks dealing a critical damage of '+damage+'!')
+          this.logs.unshift('Player attacks dealing a critical damage of '+damage+'!')
           if(this.monsterHp <= damage){
             this.monsterHp = 0
             this.logs.unshift('The monster is dead! Player wins!')
@@ -103,7 +103,7 @@ export default {
         }
         else if (row >= 6) {
           let damage = this.d10()
-          this.logs.unshift('Player atacks dealing a damage of '+damage+'!')
+          this.logs.unshift('Player attacks dealing a damage of '+damage+'!')
           if(this.monsterHp <= damage){
             this.monsterHp = 0
             this.logs.unshift('The monster is dead! Player wins!')
@@ -113,18 +113,18 @@ export default {
           }
         }
         else{
-          this.logs.unshift('Player atacks but he miss!')
+          this.logs.unshift('Player attacks but he miss!')
         }
       }
       if (this.monsterHp > 0) {
         this.monsterTurn()
       }
     },
-    monsterAtack(){
+    monsterAttack(){
       let row = this.d20()
       if (row >= 19){
         let damage = this.d10()+this.d10()
-        this.logs.unshift('Monster atacks dealing a critical damage of '+damage+'!')
+        this.logs.unshift('Monster attacks dealing a critical damage of '+damage+'!')
         if(this.playerHp <= damage){
           this.playerHp = 0
           this.logs.unshift('You died :(')
@@ -135,7 +135,7 @@ export default {
       }
       else if (row >= 6) {
         let damage = +this.d10()
-        this.logs.unshift('Monster atacks dealing a damage of '+damage+'!')
+        this.logs.unshift('Monster attacks dealing a damage of '+damage+'!')
         if(this.playerHp <= damage){
           this.playerHp = 0
           this.logs.unshift('You died :(')
@@ -145,7 +145,7 @@ export default {
         }
       }
       else{
-        this.logs.unshift('Monster atacks but he miss!')
+        this.logs.unshift('Monster attacks but he miss!')
       }
     },
     heal(){
