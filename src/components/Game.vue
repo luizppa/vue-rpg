@@ -27,13 +27,13 @@
     <hr>
     <div class="row">
       <div class="col-md-12">
-        <div class="col-md-4" align="center">
+        <div class="col-xs-4" align="center">
           <button type="button" class="btn btn-danger" :disabled="playerHp <= 0" @click="atack">ATACK</button>
         </div>
-        <div class="col-md-4" align="center">
+        <div class="col-xs-4" align="center">
           <button type="button" class="btn btn-success" :disabled="playerHp <= 0" @click="heal">HEAL</button>
         </div>
-        <div class="col-md-4" align="center">
+        <div class="col-xs-4" align="center">
           <button type="button" class="btn btn-primary" @click="restart">RESTART</button>
         </div>
       </div>
