@@ -175,7 +175,7 @@ export default {
       return this.rowDice(1, 20)
     },
     d10(){
-      return this.rowDice(1, 6)
+      return this.rowDice(1, 10)
     },
     rowDice(min, max) {
       return Math.floor(Math.random() * ((max+1) - min)) + min
