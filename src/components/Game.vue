@@ -78,6 +78,7 @@ export default {
     restart(){
       this.monsterHp = 100
       this.playerHp = 100
+      this.potions = 5
       this.logs = []
     },
     monsterTurn(){
