@@ -1,40 +1,28 @@
 <template lang="html">
   <div class="game">
     <div class="row">
-      <div class="col-md-6">
-        <p align="center">PLAYER</p>
-        <div class="bar">
-          <div class="health" :style="playerHealth">
-            <p class="status">{{ playerHp }}/100</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <p align="center">MONSTER</p>
-        <div class="bar">
-          <div class="health" :style="monsterHealth">
-            <p class="status">{{ monsterHp }}/100</p>
-          </div>
-        </div>
-      </div>
+      <player :logs="logs" :enemy="enemies[round]"></player>
+      <enemy :logs="logs" :enemy="enemies[round]" :player="player"></enemy>
     </div>
     <hr>
-    <div class="row">
+    <div class="row" v-if="player">
       <div class="col-mad-6">
-        <p>Potions: {{ potions }}</p>
+        <p>Potions: {{ player.inventory.potions }}</p>
       </div>
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12" v-if="player">
         <div class="col-xs-4" align="center">
-          <button type="button" class="btn btn-danger" :disabled="playerHp <= 0" @click="attack">ATTACK</button>
+          <button type="button" class="btn btn-danger" v-if="player.hp > 0" @click="attack">ATTACK</button>
         </div>
         <div class="col-xs-4" align="center">
-          <button type="button" class="btn btn-success" :disabled="playerHp <= 0" @click="heal">HEAL</button>
+          <button type="button" class="btn btn-primary" v-if="player.hp === 0" @click="restart">RESTART</button>
+          <button type="button" class="btn btn-primary" v-else-if="enemies[round].hp === 0" @click="round += 1">ADVANCE</button>
+          <button type="button" class="btn btn-primary" v-else @click="restart">FORFEIT</button>
         </div>
         <div class="col-xs-4" align="center">
-          <button type="button" class="btn btn-primary" @click="restart">RESTART</button>
+          <button type="button" class="btn btn-success" v-if="player.hp > 0" @click="potion">POTION</button>
         </div>
       </div>
     </div>
@@ -49,138 +37,59 @@
 </template>
 
 <script>
+import { master } from '../main'
+import { actions } from '../main'
+import Player from './Player.vue'
+import Enemy from './Enemy.vue'
+
 export default {
   data: function(){
     return {
-      playerHp: 100,
-      monsterHp: 100,
-      potions: 5,
+      player: null,
+      round: 0,
+      enemies: [
+        {
+          level: 1,
+          name: 'Skelleton',
+          hp: 70,
+          maxHp: 70
+        },
+        {
+          level: 2,
+          name: 'Werewolf',
+          hp: 100,
+          maxHp: 100
+        }
+      ],
       logs: []
     }
   },
-
-  computed: {
-    playerHealth: function(){
-      return {
-        width: this.playerHp+'%',
-        backgroundColor: '#45EE00'
-      }
-    },
-    monsterHealth: function(){
-      return {
-        width: this.monsterHp+'%',
-        backgroundColor: '#F00'
-      }
-    }
+  created(){
+    master.$on('newPlayer', (player) => {
+      this.player = player
+    })
   },
-
   methods: {
     restart(){
-      this.monsterHp = 100
-      this.playerHp = 100
-      this.potions = 5
       this.logs = []
-    },
-    monsterTurn(){
-      this.monsterAttack()
+      this.player.maxHp = 100
+      this.player.hp = this.player.maxHp
+      this.player.inventory.potions = 5
+      this.enemies.forEach(function(enemy, index){
+        enemy.hp = enemy.maxHp
+      })
+      this.round = 0
     },
     attack(){
-      if (this.monsterHp <= 0) {
-        this.logs.unshift('The monster is already dead!')
-      }
-      else{
-        let row = this.d20()
-        if (row >= 19){
-          let damage = this.d10()+this.d10()
-          this.logs.unshift('Player attacks dealing a critical damage of '+damage+'!')
-          if(this.monsterHp <= damage){
-            this.monsterHp = 0
-            this.logs.unshift('The monster is dead! Player wins!')
-          }
-          else{
-            this.monsterHp -= damage
-          }
-        }
-        else if (row >= 6) {
-          let damage = this.d10()
-          this.logs.unshift('Player attacks dealing a damage of '+damage+'!')
-          if(this.monsterHp <= damage){
-            this.monsterHp = 0
-            this.logs.unshift('The monster is dead! Player wins!')
-          }
-          else{
-            this.monsterHp -= damage
-          }
-        }
-        else{
-          this.logs.unshift('Player attacks but he miss!')
-        }
-      }
-      if (this.monsterHp > 0) {
-        this.monsterTurn()
-      }
+      actions.$emit('attack')
     },
-    monsterAttack(){
-      let row = this.d20()
-      if (row >= 19){
-        let damage = this.d10()+this.d10()
-        this.logs.unshift('Monster attacks dealing a critical damage of '+damage+'!')
-        if(this.playerHp <= damage){
-          this.playerHp = 0
-          this.logs.unshift('You died :(')
-        }
-        else{
-          this.playerHp -= damage
-        }
-      }
-      else if (row >= 6) {
-        let damage = +this.d10()
-        this.logs.unshift('Monster attacks dealing a damage of '+damage+'!')
-        if(this.playerHp <= damage){
-          this.playerHp = 0
-          this.logs.unshift('You died :(')
-        }
-        else{
-          this.playerHp -= damage
-        }
-      }
-      else{
-        this.logs.unshift('Monster attacks but he miss!')
-      }
-    },
-    heal(){
-      if (this.potions > 0) {
-        this.potions -= 1
-        if (this.playerHp >= 100) {
-          this.logs.unshift('Player tries to heal but he is already on full health!')
-        }
-        else{
-          let potion = this.d10()
-          this.logs.unshift('Player uses a potion restoring '+potion+' HP!')
-          if (this.playerHp + potion > 100) {
-            this.playerHp = 100
-          }
-          else{
-            this.playerHp += potion
-          }
-        }
-      }
-      else{
-        this.logs.unshift('Player tries to heal but he has no potions left!')
-      }
-      if (this.monsterHp > 0) {
-        this.monsterTurn()
-      }
-    },
-    d20(){
-      return this.rowDice(1, 20)
-    },
-    d10(){
-      return this.rowDice(1, 10)
-    },
-    rowDice(min, max) {
-      return Math.floor(Math.random() * ((max+1) - min)) + min
+    potion(){
+      actions.$emit('potion')
     }
+  },
+  components: {
+    'player': Player,
+    'enemy': Enemy
   }
 }
 </script>
@@ -193,9 +102,6 @@ export default {
   height: 30px;
   width: 100%;
   border: 1px solid black;
-}
-.health{
-  height: 100%;
 }
 .status{
   color: white;
