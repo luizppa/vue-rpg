@@ -11,6 +11,7 @@
 
 <script>
 import { master } from '../main'
+import ItemActions from './resources/items'
 
 export default {
   props: ['enemy', 'player', 'logs'],
@@ -20,16 +21,7 @@ export default {
   },
   created() {
     master.$on('enemyDefeated', () => {
-      switch (this.enemy.level) {
-        case 1:
-          this.player.inventory.potions += 3
-          this.player.maxHp += 10
-          break
-        case 2:
-          this.player.inventory.potions += 5
-          this.player.maxHp += 15
-          break
-      }
+      this.reward()
     })
     master.$on('enemyTurn', () => {
       this.startTurn()
@@ -47,9 +39,16 @@ export default {
       switch (this.enemy.level) {
         case 1:
           damageCalc = master.d8
-          break;
+          break
         case 2:
+          damageCalc = master.d8
+          break
+        case 3:
           damageCalc = master.d10
+          break
+        case 4:
+          damageCalc = master.d12
+          break
       }
       if (row >= 19){
         let damage = damageCalc()+damageCalc()
@@ -75,6 +74,43 @@ export default {
       }
       else{
         this.logs.unshift(this.enemy.name+' attacks but he miss!')
+      }
+    },
+    reward(){
+      switch (this.enemy.level) {
+        case 1:
+          this.player.inventory['potion'].amount += 3
+          this.player.maxHp += Math.floor(this.player.hp/5)
+          this.logs.unshift('3 potions acquired')
+          break
+        case 2:
+          this.player.inventory['potion'].amount += 5
+          this.logs.unshift('5 potions acquired')
+          this.player.inventory['silver shuriken'] = {
+            amount: 2,
+            action: ItemActions.silverShuriken
+          }
+          this.logs.unshift('2 silver shurikens acquired')
+          this.player.damage = master.d12
+          this.player.maxHp += Math.floor(this.player.hp/3)
+          break
+        case 3:
+          this.player.inventory['potion'].amount += 5
+          this.logs.unshift('5 potions acquired')
+          this.player.inventory['ice magicite'] = {
+            amount: 3,
+            action: ItemActions.iceMagicite
+          }
+          this.logs.unshift('3 ice magicites acquired')
+          this.player.damage = function() {
+            return master.d12() + master.d4()
+          }
+          this.player.maxHp += Math.floor(this.player.hp*1.5)
+          break
+        case 4:
+          this.player.inventory['potion'].amount += 5
+          this.player.maxHp += Math.floor(this.player.hp)
+          break
       }
     }
   }

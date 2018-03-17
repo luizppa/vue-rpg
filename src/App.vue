@@ -2,9 +2,7 @@
   <div id="app">
     <div class="container">
       <p class="title" align="center">RPG</p>
-      <div class="col-md-6 col-md-offset-3">
-        <rpg-game></rpg-game>
-      </div>
+      <rpg-game></rpg-game>
     </div>
   </div>
 </template>
@@ -22,7 +20,7 @@ import Game from './components/Game.vue'
   }
 </script>
 
-<style>
+<style scoped>
 .title{
   font-size: 50px;
   /* font-family: 'Rye', cursive; */
