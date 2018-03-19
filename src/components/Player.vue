@@ -20,6 +20,7 @@ export default {
     return {
       player: {
         name: 'Player',
+        ca: 5,
         hp: 100,
         maxHp: 100,
         damage: master.d10,
@@ -78,7 +79,7 @@ export default {
       master.$emit('enemyTurn')
     },
     use(item){
-      if (this.player.hp > 0) {
+      if (this.player.hp > 0 || item === 'revive') {
         if (this.player.inventory[item].amount > 0) {
           this.player.inventory[item].amount -= 1
           this.player.inventory.potion.amount += 1

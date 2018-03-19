@@ -57,6 +57,7 @@ export default {
         {
           level: 1,
           name: 'Skelleton',
+          damageCalc: master.d8,
           hp: 70,
           maxHp: 70,
           weakness: 0 // Holy
@@ -64,6 +65,7 @@ export default {
         {
           level: 2,
           name: 'Bandit Captain',
+          damageCalc: master.d8,
           hp: 100,
           maxHp: 100,
           weakness: 1 // Fire
@@ -71,6 +73,7 @@ export default {
         {
           level: 3,
           name: 'Werewolf',
+          damageCalc: master.d10,
           hp: 115,
           maxHp: 115,
           weakness: 2 // Silver
@@ -78,8 +81,33 @@ export default {
         {
           level: 4,
           name: 'Behemoth',
+          damageCalc: master.d12,
           hp: 140,
           maxHp: 140,
+          weakness: 3 // Ice
+        },
+        {
+          level: 5,
+          name: 'Orc Leader',
+          damageCalc: function(){return master.d8() + master.d8()},
+          hp: 150,
+          maxHp: 150,
+          weakness: 1 // Fire
+        },
+        {
+          level: 6,
+          name: 'Dragon Priest',
+          damageCalc: function(){return master.d10() + master.d10()},
+          hp: 160,
+          maxHp: 160,
+          weakness: 0 // Holy
+        },
+        {
+          level: 7,
+          name: 'Giant',
+          damageCalc: master.d20,
+          hp: 180,
+          maxHp: 180,
           weakness: 3 // Ice
         }
       ],

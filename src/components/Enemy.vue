@@ -35,23 +35,8 @@ export default {
     },
     attack(){
       let row = master.d20()
-      let damageCalc = master.d2
-      switch (this.enemy.level) {
-        case 1:
-          damageCalc = master.d8
-          break
-        case 2:
-          damageCalc = master.d8
-          break
-        case 3:
-          damageCalc = master.d10
-          break
-        case 4:
-          damageCalc = master.d12
-          break
-      }
       if (row >= 19){
-        let damage = damageCalc()+damageCalc()
+        let damage = this.enemy.damageCalc()+this.enemy.damageCalc()
         this.logs.unshift(this.enemy.name+' attacks dealing a critical damage of '+damage+'!')
         if(this.player.hp <= damage){
           this.player.hp = 0
@@ -61,8 +46,8 @@ export default {
           this.player.hp -= damage
         }
       }
-      else if (row >= 6) {
-        let damage = damageCalc()
+      else if (row > this.player.ca) {
+        let damage = this.enemy.damageCalc()
         this.logs.unshift(this.enemy.name+' attacks dealing a damage of '+damage+'!')
         if(this.player.hp <= damage){
           this.player.hp = 0
@@ -97,6 +82,10 @@ export default {
         case 3:
           this.player.inventory['potion'].amount += 5
           this.logs.unshift('5 potions acquired')
+          this.player.inventory['hi-potion'] = {
+            amount: 4,
+            action: ItemActions.hiPotion
+          }
           this.player.inventory['ice magicite'] = {
             amount: 3,
             action: ItemActions.iceMagicite
@@ -109,7 +98,31 @@ export default {
           break
         case 4:
           this.player.inventory['potion'].amount += 5
+          this.player.inventory['hi-potion'].amount += 4
+          this.player.inventory['behemoth skin'] = {
+            amount: 1,
+            action: ItemActions.behemothSkin
+          }
           this.player.maxHp += Math.floor(this.player.hp)
+          break
+        case 5:
+          this.player.inventory['life stone'] = {
+            amount: 1,
+            action: ItemActions.lifeStone
+          },
+          this.player.inventory['orchrish blade'] = {
+            amount: 1,
+            action: ItemActions.orchrishBlade
+          }
+          this.player.maxHp += Math.floor(this.player.hp/3)
+          break
+        case 6:
+          this.player.inventory['hi-potion'].amount += 4
+          this.player.inventory['revive'] = {
+            amount: 1,
+            action: ItemActions.revive
+          }
+          this.player.maxHp += Math.floor(this.player.hp/2)
           break
       }
     }
