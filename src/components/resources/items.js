@@ -6,7 +6,7 @@ export default {
       data.logs.unshift(data.player.name+' tries to heal but he is already on full health!')
     }
     else{
-      let gain = master.d20()
+      let gain = 20
       data.logs.unshift(data.player.name+' uses a potion restoring '+gain+' HP!')
       if (data.player.hp + gain > data.player.maxHp) {
         data.player.hp = data.player.maxHp
@@ -22,8 +22,8 @@ export default {
       data.logs.unshift(data.player.name+' tries to heal but he is already on full health!')
     }
     else{
-      let gain = master.d10() + master.d10() + master.d10()
-      data.logs.unshift(data.player.name+' uses a potion restoring '+gain+' HP!')
+      let gain = 32
+      data.logs.unshift(data.player.name+' uses a hi-potion restoring '+gain+' HP!')
       if (data.player.hp + gain > data.player.maxHp) {
         data.player.hp = data.player.maxHp
       }
@@ -94,13 +94,13 @@ export default {
     data.logs.unshift(data.player.name+' is now using an orchrish blade!')
   },
 
-  revive(data){
+  phoenixDown(data){
     if (data.player.hp === 0) {
       data.player.hp = 100
       data.logs.unshift('Its a miracle! '+data.player.name+' is back to life!')
     }
     else {
-      data.logs.unshift(data.player.name+' tried to use revive but he miss!')
+      data.logs.unshift(data.player.name+' tried to use Phoenix Down but he miss!')
     }
   }
 }

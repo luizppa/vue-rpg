@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="row game">
     <div class="col-sm-3" v-if="player">
-      <inventory :inventory="player.inventory" v-if="showInventory"></inventory>
+      <inventory :player="player" :enemy="enemies[round]" :logs="logs" v-if="showInventory"></inventory>
     </div>
     <div class="col-sm-6">
       <div class="row">
@@ -14,15 +14,9 @@
           <div class="col-xs-6" align="center">
             <button type="button" class="btn btn-danger" v-if="player.hp > 0" @click="attack">ATTACK</button>
           </div>
-          <!-- <div class="col-xs-3" align="center">
-          <button type="button" class="btn btn-primary" @click="showInventory = !showInventory">ITEM</button>
-        </div>
-        <div class="col-xs-3" align="center">
-        <button type="button" class="btn btn-primary" @click="showMagic = !showMagic">MAGIC</button>
-      </div> -->
       <div class="col-xs-6" align="center">
         <button type="button" class="btn btn-danger" v-if="player.hp === 0" @click="restart">RESTART</button>
-        <button type="button" class="btn btn-success" v-else-if="enemies[round].hp === 0" @click="round += 1">ADVANCE</button>
+        <button type="button" class="btn btn-success" v-else-if="enemies[round].hp === 0" @click="round += 1" :disabled="round === enemies.length-1">ADVANCE</button>
         <button type="button" class="btn btn-danger" v-else @click="restart">FORFEIT</button>
       </div>
     </div>
@@ -42,6 +36,7 @@
 <script>
 import { master } from '../main'
 import { actions } from '../main'
+import ItemActions from './resources/items'
 import Player from './Player.vue'
 import Enemy from './Enemy.vue'
 import Inventory from './Inventory.vue'
@@ -126,22 +121,8 @@ export default {
       this.player.hp = this.player.maxHp
       this.player.inventory = {
         potion: {
-          amount: 3,
-          action(data){
-            if (data.player.hp >= data.player.maxHp) {
-              data.logs.unshift(data.player.name+' tries to heal but he is already on full health!')
-            }
-            else{
-              let gain = master.d12()
-              data.logs.unshift(data.player.name+' uses a potion restoring '+gain+' HP!')
-              if (data.player.hp + gain > data.player.maxHp) {
-                data.player.hp = data.player.maxHp
-              }
-              else{
-                data.player.hp += gain
-              }
-            }
-          }
+          amount: 1,
+          action: ItemActions.potion
         }
       }
       this.enemies.forEach(function(enemy){

@@ -26,7 +26,7 @@ export default {
         damage: master.d10,
         inventory: {
           potion: {
-            amount: 3,
+            amount: 1,
             action: ItemActions.potion
           }
         },
@@ -79,7 +79,7 @@ export default {
       master.$emit('enemyTurn')
     },
     use(item){
-      if (this.player.hp > 0 || item === 'revive') {
+      if (this.player.hp > 0 || item === 'phoenix down') {
         if (this.player.inventory[item].amount > 0) {
           this.player.inventory[item].amount -= 1
           this.player.inventory.potion.amount += 1
