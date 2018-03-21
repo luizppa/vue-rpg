@@ -24,9 +24,12 @@
   <hr>
   <div class="row">
     <!-- eslint-disable-next-line -->
-    <div class="col-md-8 col-md-offset-2" align="center" v-for="log in logs">
+    <div class="col-md-8 col-md-offset-2" align="center" v-for="log in logs.slice(0, logAmount)">
       <p class="log">{{ log }}</p>
       <hr>
+    </div>
+    <div class="col-md-8 col-md-offset-2" align="center">
+      <button type="button" class="btn btn-primary" name="button" @click="toggleLogs">{{ logAll ? 'Recent Only' : 'Full Log' }}</button>
     </div>
   </div>
 </div>
@@ -36,10 +39,12 @@
 <script>
 import { master } from '../main'
 import { actions } from '../main'
-import ItemActions from './resources/items'
+import ItemActions from '../resources/items'
 import Player from './Player.vue'
 import Enemy from './Enemy.vue'
 import Inventory from './Inventory.vue'
+
+var NPC = require('../resources/enemies')
 
 export default {
   data: function(){
@@ -48,65 +53,10 @@ export default {
       showMagic: true,
       player: null,
       round: 0,
-      enemies: [
-        {
-          level: 1,
-          name: 'Skelleton',
-          damageCalc: master.d8,
-          hp: 70,
-          maxHp: 70,
-          weakness: 0 // Holy
-        },
-        {
-          level: 2,
-          name: 'Bandit Captain',
-          damageCalc: master.d8,
-          hp: 100,
-          maxHp: 100,
-          weakness: 1 // Fire
-        },
-        {
-          level: 3,
-          name: 'Werewolf',
-          damageCalc: master.d10,
-          hp: 115,
-          maxHp: 115,
-          weakness: 2 // Silver
-        },
-        {
-          level: 4,
-          name: 'Behemoth',
-          damageCalc: master.d12,
-          hp: 140,
-          maxHp: 140,
-          weakness: 3 // Ice
-        },
-        {
-          level: 5,
-          name: 'Orc Leader',
-          damageCalc: function(){return master.d8() + master.d8()},
-          hp: 150,
-          maxHp: 150,
-          weakness: 1 // Fire
-        },
-        {
-          level: 6,
-          name: 'Dragon Priest',
-          damageCalc: function(){return master.d10() + master.d10()},
-          hp: 160,
-          maxHp: 160,
-          weakness: 0 // Holy
-        },
-        {
-          level: 7,
-          name: 'Giant',
-          damageCalc: master.d20,
-          hp: 180,
-          maxHp: 180,
-          weakness: 3 // Ice
-        }
-      ],
-      logs: []
+      enemies: NPC.enemies,
+      logs: [],
+      logAll: false,
+      logAmount: 5
     }
   },
   created(){
@@ -135,6 +85,16 @@ export default {
     },
     potion(){
       actions.$emit('potion')
+    },
+    toggleLogs(){
+      if (this.logAll) {
+        this.logAll = false
+        this.logAmount = 5
+      }
+      else{
+        this.logAll = true
+        this.logAmount = this.logs.length
+      }
     }
   },
   components: {

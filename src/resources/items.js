@@ -1,4 +1,4 @@
-import { master } from '../../main'
+import { master } from '../main'
 
 export default {
   potion(data){

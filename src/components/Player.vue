@@ -12,7 +12,7 @@
 <script>
 import { master } from '../main'
 import { actions } from '../main'
-import ItemActions from './resources/items'
+import ItemActions from '../resources/items'
 
 export default {
   props: ['enemy', 'logs'],

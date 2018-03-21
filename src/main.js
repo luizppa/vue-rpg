@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './App.vue'
+import App from './App.vue' 
 import 'bootstrap'
 
 Vue.config.productionTip = false
@@ -8,6 +8,9 @@ export const actions = new Vue({})
 
 export const master = new Vue({
   methods: {
+    d100(){
+      return this.rollDice(1, 100)
+    },
     d20(){
       return this.rollDice(1, 20)
     },

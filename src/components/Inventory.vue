@@ -11,7 +11,7 @@
 <script>
 import { actions } from '../main'
 import { master } from '../main'
-import ItemActions from './resources/items'
+import ItemActions from '../resources/items'
 
 export default {
   created(){
@@ -98,7 +98,7 @@ export default {
     font-size: 30px;
   }
   .slot{
-    display: inline-block;
+    display: block;
     /* box-shadow: 0px 0px 5px #A2A2A2; */
     /* padding: 2% 3% 2% 3%; */
     margin: 2%;
