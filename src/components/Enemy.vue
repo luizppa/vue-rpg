@@ -1,9 +1,9 @@
 <template>
   <div class="col-md-6">
     <p align="center">{{ enemy.name.toUpperCase() }}</p>
-    <div class="bar">
+    <div class="hp-bar">
       <div class="health" :style="{width: (enemy.hp/enemy.maxHp*100)+'%'}">
-        <p class="status">{{ enemy.hp }}/{{ enemy.maxHp }}</p>
+        <p class="hp-status">{{ enemy.hp }}/{{ enemy.maxHp }}</p>
       </div>
     </div>
   </div>
@@ -12,6 +12,8 @@
 <script>
 import { master } from '../main'
 
+var dices = require('../resources/dices')
+
 export default {
   props: ['enemy', 'player', 'logs'],
   data: function(){
@@ -19,19 +21,24 @@ export default {
     }
   },
   created() {
+    console.log('Enemy created')
     master.$on('enemyTurn', () => {
-      this.startTurn()
+      if(this.enemy.hp > 0){
+        // setTimeout(() => {
+          this.startTurn()
+          master.$emit('playerTurn')
+        // } ,0)
+      }
+      else master.$emit('playerTurn')
     })
   },
   methods: {
     startTurn(){
-      if(this.enemy.hp > 0){
-        this.attack()
-      }
+      this.attack()
     },
     attack(){
-      let row = master.d20()
-      if (row >= 19){
+      let roll = dices.d20()
+      if (roll >= 19){
         let damage = this.enemy.damageCalc()+this.enemy.damageCalc()
         this.logs.unshift(this.enemy.name+' attacks dealing a critical damage of '+damage+'!')
         if(this.player.hp <= damage){
@@ -42,7 +49,7 @@ export default {
           this.player.hp -= damage
         }
       }
-      else if (row > this.player.ca) {
+      else if (roll > this.player.ca) {
         let damage = this.enemy.damageCalc()
         this.logs.unshift(this.enemy.name+' attacks dealing a damage of '+damage+'!')
         if(this.player.hp <= damage){

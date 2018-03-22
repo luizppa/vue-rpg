@@ -1,4 +1,5 @@
 import { master } from '../main'
+var dices = require('./dices')
 
 export default {
   potion(data){
@@ -40,10 +41,10 @@ export default {
     else{
       let damage
       if (data.enemy.weakness === 2) {
-        damage = 12+master.d20()
+        damage = 12+dices.d20()
       }
       else{
-        damage = 6+master.d8()
+        damage = 6+dices.d8()
       }
       data.logs.unshift(data.player.name+' uses a silver shuriken dealing dealing a damage of '+damage+'!')
       if (data.enemy.hp > damage) {
@@ -63,10 +64,10 @@ export default {
     else{
       let damage
       if (data.enemy.weakness === 3) {
-        damage = 10+master.d10()+master.d10()+master.d10()
+        damage = 15+dices.d10()+dices.d10()
       }
       else{
-        damage = 5+master.d10()
+        damage = 5+dices.d10()
       }
       data.logs.unshift(data.player.name+' uses an ice magicite dealing a damage of '+damage+'!')
       if (data.enemy.hp > damage) {
@@ -90,7 +91,7 @@ export default {
   },
 
   orchrishBlade(data){
-    data.player.damage = function() {return master.d10()+master.d10()}
+    data.player.damage = function() {return dices.d10()+dices.d10()}
     data.logs.unshift(data.player.name+' is now using an orchrish blade!')
   },
 

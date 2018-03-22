@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="row game">
-    <div class="col-sm-3" v-if="player">
-      <inventory :player="player" :enemy="enemies[round]" :logs="logs" v-if="showInventory"></inventory>
-    </div>
+    <inventory :player="player" :enemy="enemies[round]" :logs="logs" :playerTurn="playerTurn"></inventory>
     <div class="col-sm-6">
       <div class="row">
         <player :logs="logs" :enemy="enemies[round]"></player>
@@ -12,39 +10,42 @@
       <div class="row">
         <div class="col-xs-12" v-if="player">
           <div class="col-xs-6" align="center">
-            <button type="button" class="btn btn-danger" v-if="player.hp > 0" @click="attack">ATTACK</button>
+            <button type="button" class="btn btn-danger" :disabled="player.hp <= 0 || !playerTurn" @click="attack">ATTACK</button>
           </div>
-      <div class="col-xs-6" align="center">
-        <button type="button" class="btn btn-danger" v-if="player.hp === 0" @click="restart">RESTART</button>
-        <button type="button" class="btn btn-success" v-else-if="enemies[round].hp === 0" @click="round += 1" :disabled="round === enemies.length-1">ADVANCE</button>
-        <button type="button" class="btn btn-danger" v-else @click="restart">FORFEIT</button>
+          <div class="col-xs-6" align="center">
+            <button type="button" class="btn btn-danger" v-if="player.hp === 0" @click="restart">RESTART</button>
+            <button type="button" class="btn btn-success" v-else-if="enemies[round].hp === 0" @click="round += 1" :disabled="round === enemies.length-1">ADVANCE</button>
+            <button type="button" class="btn btn-danger" v-else @click="restart">FORFEIT</button>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2 toggle" align="center">
+          <button type="button" class="btn btn-primary" name="button" @click="toggleLogs">{{ logAll ? 'Recent Only' : 'Full Log' }}</button>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div class="col-md-8 col-md-offset-2" align="center" v-for="log in logs.slice(0, logAmount)">
+          <p class="log">{{ log }}</p>
+          <hr>
+        </div>
       </div>
     </div>
-  </div>
-  <hr>
-  <div class="row">
-    <!-- eslint-disable-next-line -->
-    <div class="col-md-8 col-md-offset-2" align="center" v-for="log in logs.slice(0, logAmount)">
-      <p class="log">{{ log }}</p>
-      <hr>
-    </div>
-    <div class="col-md-8 col-md-offset-2" align="center">
-      <button type="button" class="btn btn-primary" name="button" @click="toggleLogs">{{ logAll ? 'Recent Only' : 'Full Log' }}</button>
-    </div>
-  </div>
-</div>
+    <magic :player="player" :enemy="enemies[round]" :logs="logs"  :playerTurn="playerTurn"></magic>
   </div>
 </template>
 
 <script>
 import { master } from '../main'
 import { actions } from '../main'
-import ItemActions from '../resources/items'
+import Items from '../resources/items'
+import Magics  from '../resources/magics'
 import Player from './Player.vue'
 import Enemy from './Enemy.vue'
 import Inventory from './Inventory.vue'
+import Magic from './Magic.vue'
 
-var NPC = require('../resources/enemies')
+var NPC = require('../resources/npcs')
 
 export default {
   data: function(){
@@ -56,12 +57,20 @@ export default {
       enemies: NPC.enemies,
       logs: [],
       logAll: false,
-      logAmount: 5
+      logAmount: 5,
+      playerTurn: true
     }
   },
   created(){
+    console.log('Game created')
     master.$on('newPlayer', (player) => {
       this.player = player
+    })
+    master.$on('playerTurn', () => {
+      this.playerTurn = true
+    })
+    master.$on('enemyTurn', () => {
+      this.playerTurn = false
     })
   },
   methods: {
@@ -69,11 +78,21 @@ export default {
       this.logs = []
       this.player.maxHp = 100
       this.player.hp = this.player.maxHp
+      this.player.maxMp = 60
+      this.player.mp = this.player.maxMp
       this.player.inventory = {
         potion: {
           amount: 1,
-          action: ItemActions.potion
+          action: Items.potion
         }
+      }
+      this.player.magic = {
+        cure: Magics.cure,
+        fire: Magics.fire,
+        water: Magics.water,
+        thunder: Magics.thunder,
+        air: Magics.air,
+        blizzard: Magics.blizzard
       }
       this.enemies.forEach(function(enemy){
         enemy.hp = enemy.maxHp
@@ -98,23 +117,39 @@ export default {
     }
   },
   components: {
-    'player': Player,
-    'enemy': Enemy,
-    'inventory': Inventory
+    player: Player,
+    enemy: Enemy,
+    inventory: Inventory,
+    magic: Magic
   }
 }
 </script>
 
 <style>
+.toggle{
+  margin-bottom: 20px;
+}
 .game{
   font-family: 'Inknut Antiqua', serif;
 }
-.bar{
+.hp-bar{
   height: 30px;
   width: 100%;
   border: 1px solid black;
 }
-.status{
+.mp-bar{
+  margin-top: 3px;
+  height: 8px;
+  width: 100%;
+  border: 1px solid black;
+}
+.hp-status{
+  color: white;
+  margin: 0;
+  padding: 1%
+}
+.mp-status{
+  font-size: 10px;
   color: white;
   margin: 0;
   padding: 1%
