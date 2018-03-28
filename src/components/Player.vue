@@ -107,7 +107,7 @@ export default {
           this.player.inventory[item].amount -= 1
           this.player.inventory.potion.amount += 1
           this.player.inventory.potion.amount -= 1
-          this.player.inventory[item].action(this)
+          this.player.inventory[item].action(this, this.player, this.enemy)
         }
         else this.logs.unshift(this.player.name+' tries to use '+item+' but he has none left!')
         master.$emit('enemyTurn')
@@ -117,7 +117,7 @@ export default {
       if (this.player.hp > 0) {
         if (this.player.mp >= this.player.magic[magic].cost) {
           this.player.mp -= this.player.magic[magic].cost
-          this.player.magic[magic].action(this)
+          this.player.magic[magic].action(this, this.player, this.enemy)
         }
         else this.logs.unshift(this.player.name+' tries use '+magic+' but he has not enough MP!')
         master.$emit('enemyTurn')

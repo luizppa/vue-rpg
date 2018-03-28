@@ -1,5 +1,5 @@
 module.exports = {
-  rollDice: function(min, max) {
+  rollDice(min, max) {
     return Math.floor(Math.random() * ((max+1) - min)) + min
   },
   d100(){

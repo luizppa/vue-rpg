@@ -44,8 +44,7 @@ import Player from './Player.vue'
 import Enemy from './Enemy.vue'
 import Inventory from './Inventory.vue'
 import Magic from './Magic.vue'
-
-var NPC = require('../resources/npcs')
+import NPC from '../resources/npcs'
 
 export default {
   data: function(){

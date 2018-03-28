@@ -1,6 +1,10 @@
+import items from './items'
+// eslint-disable-next-line
+import magics from './magics'
+import techniques from './techniques'
 var dices = require('./dices.js')
 
-module.exports = {
+export default {
   enemies: [
     {
       level: 1,
@@ -9,7 +13,10 @@ module.exports = {
       status: [],
       hp: 70,
       maxHp: 70,
-      weakness: 0 // Holy
+      weakness: 0, // Holy
+      action(data){
+        data.attack()
+      }
     },
     {
       level: 2,
@@ -18,7 +25,20 @@ module.exports = {
       status: [],
       hp: 100,
       maxHp: 100,
-      weakness: 1 // Fire
+      weakness: 1, // Fire
+      inventory: {
+        potion: {
+          amount: 1,
+          action: items.potion
+        }
+      },
+      action(data){
+        if (this.hp <= 20 && this.inventory.potion.amount > 0) {
+          this.inventory.potion.amount--
+          this.inventory.potion.action(data, this, data.player)
+        }
+        else data.attack()
+      }
     },
     {
       level: 3,
@@ -27,7 +47,11 @@ module.exports = {
       status: [],
       hp: 115,
       maxHp: 115,
-      weakness: 2 // Silver
+      weakness: 2, // Silver
+      action(data){
+        if(this.hp < 40 && !this.status.includes('blood thirsty')) techniques.bark(data, this, this.player)
+        else data.attack()
+      }
     },
     {
       level: 4,
@@ -36,7 +60,10 @@ module.exports = {
       status: [],
       hp: 130,
       maxHp: 130,
-      weakness: 3 // Ice
+      weakness: 3, // Ice
+      action(data){
+        data.attack()
+      }
     },
     {
       level: 5,
@@ -45,7 +72,10 @@ module.exports = {
       status: [],
       hp: 145,
       maxHp: 145,
-      weakness: 1 // Fire
+      weakness: 1, // Fire
+      action(data){
+        data.attack()
+      }
     },
     {
       level: 6,
@@ -54,7 +84,10 @@ module.exports = {
       status: [],
       hp: 160,
       maxHp: 160,
-      weakness: 3 // Ice
+      weakness: 3, // Ice
+      action(data){
+        data.attack()
+      }
     },
     {
       level: 7,
@@ -63,7 +96,10 @@ module.exports = {
       status: [],
       hp: 180,
       maxHp: 180,
-      weakness: 0 // Holy
+      weakness: 0, // Holy
+      action(data){
+        data.attack()
+      }
     },
     {
       level: 8,
@@ -72,7 +108,10 @@ module.exports = {
       status: [],
       hp: 190,
       maxHp: 190,
-      weakness: 3 // Ice
+      weakness: 3, // Ice
+      action(data){
+        data.attack()
+      }
     },
     {
       level: 9,
@@ -81,7 +120,10 @@ module.exports = {
       status: [],
       hp: 210,
       maxHp: 210,
-      weakness: 1 // Fire
+      weakness: 1, // Fire
+      action(data){
+        data.attack()
+      }
     },
     {
       level: 10,
@@ -90,7 +132,10 @@ module.exports = {
       status: [],
       hp: 230,
       maxHp: 230,
-      weakness: 3 // Ice
+      weakness: 3, // Ice
+      action(data){
+        data.attack()
+      }
     }
   ]
 }

@@ -34,11 +34,22 @@ export default {
   },
   methods: {
     startTurn(){
-      this.attack()
+      this.enemy.action(this)
     },
     attack(){
       let roll = dices.d20()
       if (roll >= 19){
+        let damage = this.enemy.damageCalc()+this.enemy.damageCalc()
+        this.logs.unshift(this.enemy.name+' attacks dealing a critical damage of '+damage+'!')
+        if(this.player.hp <= damage){
+          this.player.hp = 0
+          this.logs.unshift('You died :(')
+        }
+        else{
+          this.player.hp -= damage
+        }
+      }
+      else if (roll > 12 && this.enemy.status.includes('blood thirsty')){
         let damage = this.enemy.damageCalc()+this.enemy.damageCalc()
         this.logs.unshift(this.enemy.name+' attacks dealing a critical damage of '+damage+'!')
         if(this.player.hp <= damage){
