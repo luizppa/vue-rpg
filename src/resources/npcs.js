@@ -25,6 +25,7 @@ export default {
       status: [],
       hp: 100,
       maxHp: 100,
+      lastBreath: true,
       weakness: 1, // Fire
       inventory: {
         potion: {
@@ -37,6 +38,10 @@ export default {
           this.inventory.potion.amount--
           this.inventory.potion.action(data, this, data.player)
         }
+        else if (this.hp <= 8 && this.lastBreath){
+          this.lastBreath = false
+          techniques.raid(data, this, data.player)
+        }
         else data.attack()
       }
     },
@@ -47,9 +52,14 @@ export default {
       status: [],
       hp: 115,
       maxHp: 115,
+      lastBreath: true,
       weakness: 2, // Silver
       action(data){
-        if(this.hp < 40 && !this.status.includes('blood thirsty')) techniques.bark(data, this, this.player)
+        if(this.hp < 40 && !this.status.includes('blood thirsty')) techniques.bark(data, this, data.player)
+        else if (this.hp <= 8 && this.lastBreath){
+          this.lastBreath = false
+          techniques.raid(data, this, data.player)
+        }
         else data.attack()
       }
     },
@@ -98,6 +108,9 @@ export default {
       maxHp: 180,
       weakness: 0, // Holy
       action(data){
+        if (dices.d20()+dices.d20() == 20) {
+          magics.inferno(data, this, data.player)
+        }
         data.attack()
       }
     },

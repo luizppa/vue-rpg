@@ -33,6 +33,7 @@ export default {
         maxHp: 100,
         mp: 60,
         maxMp: 60,
+        status: [],
         damage: dices.d10,
         inventory: {
           potion: {
@@ -60,7 +61,11 @@ export default {
   },
   methods: {
     attack(){
-      if (this.enemy.hp <= 0) {
+      if (this.player.status.includes('stunned')) {
+        this.player.status.splice(this.player.status.indexOf('stunned'), 1)
+        this.logs.unshift(this.player.name+' is stunned and can\'t attack!')
+      }
+      else if (this.enemy.hp <= 0) {
         this.logs.unshift(this.enemy.name+' is already dead!')
       }
       else{

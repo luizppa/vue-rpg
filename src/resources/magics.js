@@ -4,7 +4,7 @@ var dices = require('./dices')
 export default {
   cure: {
     cost: 15,
-    action(data, actor, enemy){
+    action(data, actor, target){
       if (actor.hp >= actor.maxHp) {
         data.logs.unshift(actor.name+' tries to heal but he is already on full health!')
       }
@@ -23,7 +23,7 @@ export default {
 
   cura: {
     cost: 23,
-    action(data, actor, enemy){
+    action(data, actor, target){
       if (actor.hp >= actor.maxHp) {
         data.logs.unshift(actor.name+' tries to heal but he is already on full health!')
       }
@@ -42,7 +42,7 @@ export default {
 
   curaga: {
     cost: 28,
-    action(data, actor, enemy){
+    action(data, actor, target){
       if (actor.hp >= actor.maxHp) {
         data.logs.unshift(actor.name+' tries to heal but he is already on full health!')
       }
@@ -61,7 +61,7 @@ export default {
 
   curaja: {
     cost: 36,
-    action(data, actor, enemy){
+    action(data, actor, target){
       if (actor.hp >= actor.maxHp) {
         data.logs.unshift(actor.name+' tries to heal but he is already on full health!')
       }
@@ -80,7 +80,7 @@ export default {
 
   renew: {
     cost: 100,
-    action(data, actor, enemy){
+    action(data, actor, target){
       if (actor.hp >= actor.maxHp) {
         data.logs.unshift(actor.name+' tries to heal but he is already on full health!')
       }
@@ -99,17 +99,17 @@ export default {
 
   drain: {
     cost: 25,
-    action(data, actor, enemy){
-      if (enemy.hp <= 0) {
-        data.logs.unshift(actor.name+' uses drain but '+enemy.name+' was already dead!')
+    action(data, actor, target){
+      if (target.hp <= 0) {
+        data.logs.unshift(actor.name+' uses drain but '+target.name+' was already dead!')
       }
       else{
         let damage = 8+dices.d12()
-        if (enemy.weakness === 0) {
-          data.logs.unshift(actor.name+' uses drain but '+enemy.name+' is an undead and his life essence is poisonous!')
-          if (enemy.maxHp - enemy.hp > damage) enemy.hp += damage
+        if (target.weakness === 0) {
+          data.logs.unshift(actor.name+' uses drain but '+target.name+' is an undead and his life essence is poisonous!')
+          if (target.maxHp - target.hp > damage) target.hp += damage
           else{
-            enemy.hp = enemy.maxHp
+            target.hp = target.maxHp
           }
           if(actor.hp > damage) actor.hp -= damage
           else {
@@ -118,11 +118,11 @@ export default {
           }
         }
         else{
-          data.logs.unshift(actor.name+' uses drain stealing '+damage+' HP from '+enemy.name+'!')
-          if (enemy.hp > damage) enemy.hp -= damage
+          data.logs.unshift(actor.name+' uses drain stealing '+damage+' HP from '+target.name+'!')
+          if (target.hp > damage) target.hp -= damage
           else{
-            enemy.hp = 0
-            master.$emit('enemyDefeated')
+            target.hp = 0
+            master.$emit('targetDefeated')
           }
           if(actor.maxHp - actor.hp > damage) actor.hp += damage
           else actor.hp = actor.maxHp
@@ -133,25 +133,25 @@ export default {
 
   blizzard: {
     cost: 16,
-    action(data, actor, enemy){
-      if (enemy.hp <= 0) {
-        data.logs.unshift(actor.name+' uses blizzard but '+enemy.name+' was already dead!')
+    action(data, actor, target){
+      if (target.hp <= 0) {
+        data.logs.unshift(actor.name+' uses blizzard but '+target.name+' was already dead!')
       }
       else{
         let damage
-        if (enemy.weakness === 3) {
+        if (target.weakness === 3) {
           damage = 10+dices.d10()+dices.d10()+dices.d10()
         }
         else{
           damage = dices.d12()+dices.d10()
         }
         data.logs.unshift(actor.name+' uses blizzard dealing a damage of '+damage+'!')
-        if (enemy.hp > damage) {
-          enemy.hp -= damage
+        if (target.hp > damage) {
+          target.hp -= damage
         }
         else{
-          enemy.hp = 0
-          master.$emit('enemyDefeated')
+          target.hp = 0
+          master.$emit('targetDefeated')
         }
       }
     }
@@ -159,25 +159,25 @@ export default {
 
   fire: {
     cost: 16,
-    action(data, actor, enemy){
-      if (enemy.hp <= 0) {
-        data.logs.unshift(actor.name+' uses fire but '+enemy.name+' was already dead!')
+    action(data, actor, target){
+      if (target.hp <= 0) {
+        data.logs.unshift(actor.name+' uses fire but '+target.name+' was already dead!')
       }
       else{
         let damage
-        if (enemy.weakness === 1) {
+        if (target.weakness === 1) {
           damage = 10+dices.d10()+dices.d10()+dices.d10()
         }
         else{
           damage = dices.d12()+dices.d10()
         }
         data.logs.unshift(actor.name+' uses fire dealing a damage of '+damage+'!')
-        if (enemy.hp > damage) {
-          enemy.hp -= damage
+        if (target.hp > damage) {
+          target.hp -= damage
         }
         else{
-          enemy.hp = 0
-          master.$emit('enemyDefeated')
+          target.hp = 0
+          master.$emit('targetDefeated')
         }
       }
     }
@@ -185,25 +185,25 @@ export default {
 
   thunder: {
     cost: 16,
-    action(data, actor, enemy){
-      if (enemy.hp <= 0) {
-        data.logs.unshift(actor.name+' uses thunder but '+enemy.name+' was already dead!')
+    action(data, actor, target){
+      if (target.hp <= 0) {
+        data.logs.unshift(actor.name+' uses thunder but '+target.name+' was already dead!')
       }
       else{
         let damage
-        if (enemy.weakness === 4) {
+        if (target.weakness === 4) {
           damage = 10+dices.d10()+dices.d10()+dices.d10()
         }
         else{
           damage = dices.d12()+dices.d10()
         }
         data.logs.unshift(actor.name+' uses thunder dealing a damage of '+damage+'!')
-        if (enemy.hp > damage) {
-          enemy.hp -= damage
+        if (target.hp > damage) {
+          target.hp -= damage
         }
         else{
-          enemy.hp = 0
-          master.$emit('enemyDefeated')
+          target.hp = 0
+          master.$emit('targetDefeated')
         }
       }
     }
@@ -211,25 +211,25 @@ export default {
 
   air: {
     cost: 16,
-    action(data, actor, enemy){
-      if (enemy.hp <= 0) {
-        data.logs.unshift(actor.name+' uses air but '+enemy.name+' was already dead!')
+    action(data, actor, target){
+      if (target.hp <= 0) {
+        data.logs.unshift(actor.name+' uses air but '+target.name+' was already dead!')
       }
       else{
         let damage
-        if (enemy.weakness === 5) {
+        if (target.weakness === 5) {
           damage = 10+dices.d10()+dices.d10()+dices.d10()
         }
         else{
           damage = dices.d12()+dices.d10()
         }
         data.logs.unshift(actor.name+' uses air dealing a damage of '+damage+'!')
-        if (enemy.hp > damage) {
-          enemy.hp -= damage
+        if (target.hp > damage) {
+          target.hp -= damage
         }
         else{
-          enemy.hp = 0
-          master.$emit('enemyDefeated')
+          target.hp = 0
+          master.$emit('targetDefeated')
         }
       }
     }
@@ -237,27 +237,60 @@ export default {
 
   water: {
     cost: 16,
-    action(data, actor, enemy){
-      if (enemy.hp <= 0) {
-        data.logs.unshift(actor.name+' uses water but '+enemy.name+' was already dead!')
+    action(data, actor, target){
+      if (target.hp <= 0) {
+        data.logs.unshift(actor.name+' uses water but '+target.name+' was already dead!')
       }
       else{
         let damage
-        if (enemy.weakness === 6) {
+        if (target.weakness === 6) {
           damage = 10+dices.d10()+dices.d10()+dices.d10()
         }
         else{
           damage = dices.d12()+dices.d10()
         }
         data.logs.unshift(actor.name+' uses water dealing a damage of '+damage+'!')
-        if (enemy.hp > damage) {
-          enemy.hp -= damage
+        if (target.hp > damage) {
+          target.hp -= damage
         }
         else{
-          enemy.hp = 0
-          master.$emit('enemyDefeated')
+          target.hp = 0
+          master.$emit('targetDefeated')
         }
       }
     }
   },
+
+  inferno: {
+    cost: 36,
+    action(data, actor, target){
+      if (target.hp <= 0) {
+        data.logs.unshift(actor.name+' uses inferno but '+target.name+' was already dead!')
+      }
+      else{
+        let damage
+        if (target.weakness == 1) damage = 50+dices.d20()+dices.d20()+dices.d20()
+        else damage = 30+dices.d20()+dices.d20()
+        if (dices.d2() > 1) {
+          data.logs.unshift(actor.name+' unleashes inferno upon '+target.name+' causing a giant amount of damage!')
+          if (target.hp > damage) {
+            target.hp -= damage
+          }
+          else{
+            target.hp = 0
+          }
+        }
+        else{
+          data.logs.unshift(actor.name+' unleashes inferno upon '+target.name+' but he is unlucky and its not very effective!')
+          if (target.hp > 8) {
+            target.hp -= 8
+          }
+          else{
+            target.hp = 0
+            if(target == data.player) master.$emit('targetDefeated')
+          }
+        }
+      }
+    }
+  }
 }

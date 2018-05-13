@@ -79,6 +79,7 @@ export default {
       this.player.hp = this.player.maxHp
       this.player.maxMp = 60
       this.player.mp = this.player.maxMp
+      this.player.status = []
       this.player.inventory = {
         potion: {
           amount: 1,
