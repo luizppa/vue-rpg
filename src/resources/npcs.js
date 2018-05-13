@@ -72,7 +72,13 @@ export default {
       maxHp: 130,
       weakness: 3, // Ice
       action(data){
-        data.attack()
+        if (this.status.includes('beserk')) data.attack()
+        if (this.hp/this.maxHp*100 <= 60 && !this.status.includes('beserk')) {
+          techniques.beserk(data, this, data.player)
+        }
+        else{
+          data.attack()
+        }
       }
     },
     {
@@ -84,7 +90,13 @@ export default {
       maxHp: 145,
       weakness: 1, // Fire
       action(data){
-        data.attack()
+        if (this.status.includes('beserk')) data.attack()
+        if (this.hp/this.maxHp*100 <= 60 && !this.status.includes('beserk')) {
+          techniques.beserk(data, this, data.player)
+        }
+        else{
+          data.attack()
+        }
       }
     },
     {
@@ -96,7 +108,13 @@ export default {
       maxHp: 160,
       weakness: 3, // Ice
       action(data){
-        data.attack()
+        if (this.status.includes('beserk')) data.attack()
+        if (this.hp/this.maxHp*100 <= 60 && !this.status.includes('beserk')) {
+          techniques.beserk(data, this, data.player)
+        }
+        else{
+          data.attack()
+        }
       }
     },
     {
@@ -135,7 +153,13 @@ export default {
       maxHp: 210,
       weakness: 1, // Fire
       action(data){
-        data.attack()
+        if (this.status.includes('beserk')) data.attack()
+        if (this.hp/this.maxHp*100 <= 60 && !this.status.includes('beserk')) {
+          techniques.beserk(data, this, data.player)
+        }
+        else{
+          data.attack()
+        }
       }
     },
     {

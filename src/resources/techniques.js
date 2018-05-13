@@ -22,5 +22,10 @@ export default {
     data.attack()
     target.status.push('stunned')
     data.logs.unshift(actor.name+' is taken by anger and unleashes a attack causing '+target.name+' to be stunned!')
+  },
+
+  beserk(data, actor, target){
+    actor.status.push('beserk')
+    data.logs.unshift(actor.name+' uses beserk and will now attack more fiercely!')
   }
 }
