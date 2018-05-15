@@ -21,7 +21,7 @@ export default {
   raid(data, actor, target){
     data.attack()
     target.status.push('stunned')
-    data.logs.unshift(actor.name+' is taken by anger and unleashes a attack causing '+target.name+' to be stunned!')
+    data.logs.unshift(actor.name+' is taken by anger and unleashes a fierce attack causing '+target.name+' to be stunned!')
   },
 
   beserk(data, actor, target){
